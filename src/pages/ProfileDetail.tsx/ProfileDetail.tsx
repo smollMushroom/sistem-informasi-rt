@@ -167,8 +167,6 @@ const ProfileDetail = () => {
         throw new Error('User Data is Missing');
       }
 
-      console.log('running');
-
       await updateUser(id, user);
       setMode('view');
       setLoading(false);

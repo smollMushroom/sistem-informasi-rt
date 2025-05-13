@@ -8,6 +8,7 @@ import delay from '@/utils/helper/delay';
 import AccountValidators from '@/utils/validators/AccountValidators';
 import NotificationModal from '@/components/NotificationModal';
 import { scheduleTokenExpiry } from '@/utils/helper/token';
+import { useUserStore } from '@/stores/userStore';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -19,6 +20,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [firstErrorMessage, setFirstErrorMessage] = useState('')
   const [notificationVisible, setNotificationVisible] = useState(false);
+  const whoAmI = useUserStore(state => state.whoAmI)
 
   const validateLoginForm = (email: string, password: string) => {
     const errors = {
@@ -52,10 +54,10 @@ const Login = () => {
         delay(3000),
       ]);
 
-
       setToken(token);
       scheduleTokenExpiry(token);
       setLoading(false);
+      await whoAmI();
       navigate('/');
     } catch (error) {
       setLoading(false);

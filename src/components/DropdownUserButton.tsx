@@ -13,6 +13,7 @@ const DropdownUserButton = () => {
 
   useEffect(() => {
     if (!user) whoAmI();
+    
   }, [user, whoAmI]);
 
   useEffect(() => {

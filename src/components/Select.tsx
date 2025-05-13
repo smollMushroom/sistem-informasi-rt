@@ -15,6 +15,7 @@ interface Props {
   options: Option[];
   placeholder?: string;
   className?: string;
+  labelClassName?: string;
 }
 
 const CustomSelect: React.FC<Props> = ({
@@ -27,6 +28,7 @@ const CustomSelect: React.FC<Props> = ({
   options,
   placeholder = '-- pilih --',
   className = '',
+  labelClassName = ''
 }) => {
   const [open, setOpen] = useState(false);
   const [touched, setTouched] = useState(false);
@@ -56,19 +58,20 @@ const CustomSelect: React.FC<Props> = ({
 
   return (
     <div className={`flex flex-col gap-1 group relative ${className}`} ref={dropdownRef}>
-      <label htmlFor={id} className="font-light group-focus-within:font-normal transition-all duration-200">
+      <label htmlFor={id} className={` ${labelClassName} text-normal group-focus-within:font-normal transition-all duration-200`}>
         {label}
       </label>
 
       <div className="relative">
         <button
           type="button"
+          id={id}
           onClick={() => {
             setOpen((prev) => !prev);
             setInteracted(true);
           }}
           className={`bg-white border-2 border-slate-300 rounded-md px-2 py-1 text-left text-sm font-normal
-            focus:border-blue-400 focus:ring-2 focus:ring-blue-200 focus:outline-none w-full transition-all duration-200
+            focus:border-primary focus:ring-2 focus:ring-green-300 focus:outline-none w-full transition-all duration-200
             ${value ? 'text-black' : 'text-gray-400'}
           `}
         >

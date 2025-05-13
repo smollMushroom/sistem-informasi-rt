@@ -10,6 +10,10 @@ interface Props {
   error?: string | null;
   onValidate?: (value: string) => void;
   className?: string;
+  labelClassName?: string;
+  inputClassName?: string;
+  mode?: 'edit' | 'view'
+  viewClassName?: string;
 };
 
 const Input: React.FC<Props> = ({
@@ -22,8 +26,12 @@ const Input: React.FC<Props> = ({
   onValidate,
   error,
   className = '',
+  labelClassName = '',
+  inputClassName = '',
+  mode='edit',
+  viewClassName = ''
 }) => {
-  const [touhed, setTouched] = useState(false);
+  const [touched, setTouched] = useState(false);
  
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     setTouched(true);
@@ -32,21 +40,31 @@ const Input: React.FC<Props> = ({
 
   return (
     <div className={`flex flex-col gap-1 group ${className}`}>
-      <label htmlFor={id} className="font-normal">
-        {label}
-      </label>
+    <label htmlFor={id} className={labelClassName ? labelClassName : `font-normal text-normal`}>
+      {label}
+    </label>
+
+    {mode === 'edit' ? (
       <input
         type={type}
         autoComplete="off"
         id={id}
-        className="w-full outline-none bg-white border-2 border-slate-300 rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-400 px-[6px] py-1 text-sm font-normal transition-all duration-300 ease-in-out"
+        className={inputClassName ? inputClassName : `w-full outline-none bg-white border-2 border-slate-300 rounded-md focus:ring-2 focus:ring-green-300 focus:border-primary px-[6px] py-1 text-sm font-normal transition-all duration-300 ease-in-out`}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onBlur={handleBlur}
       />
-      {error && touhed && <p className="text-red-500 text-xs font-normal">{error}</p>}
-    </div>
+    ) : (
+      <div
+        className={viewClassName? viewClassName : "w-full bg-gray-100 border-2 border-slate-200 rounded-md px-[6px] py-1 text-sm font-normal text-gray-700"}
+      >
+        {value || '-'}
+      </div>
+    )}
+
+    {error && touched && <p className="text-red-500 text-xs font-normal">{error}</p>}
+  </div>
   )
 }
 

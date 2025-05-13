@@ -1,76 +1,171 @@
-// import { useAuthStore } from '@/stores/authStore';
-import logo from '@/assets/logo.png';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { IoClose, IoReorderThreeOutline } from 'react-icons/io5';
+import Header from '@/components/Header';
+import { Link, useNavigate } from 'react-router-dom';
+import searchDocumentIcon from '@/assets/search-document-icon.png';
+import administrationIcon from '@/assets/administration-icon.png';
+import NewsItem from '@/components/NewsItem';
+import AnimatedItem from '@/components/AnimatedItem';
+import ProfileCard from '@/components/ProfileCard';
+import profileImage from '@/assets/Profile-example.png';
+import picture from '@/assets/example.png'
+import Footer from '@/components/Footer';
+import useBreakpoint from '@/hooks/useBreakpoint';
+import { useEffect, useState } from 'react';
+import { getPost } from '@/services/postService';
+import { Post } from '@/types/post';
+import dateTimeFormatter from '@/utils/formatters/dateTimeFormatter';
+import { FaArrowRight } from 'react-icons/fa';
 
 const Home = () => {
-  // const logout = useAuthStore((state) => state.logout);
-  // const logoutHandler = () => {
-  //   logout();
-  // };
+  const breakpoint = useBreakpoint();
+  const isDesktop = breakpoint === 'desktop';
+  const [posts, setPosts] = useState<Post[]>([]);
+  const navigate = useNavigate()
 
-  const [menuOpen, setMenuOpen] = useState(false);
+  const getPosts = async () => {
+    const res = await getPost({
+      limit: 3,
+      sortBy: 'publishedAt',
+      order: 'desc',
+      page: 1,
+      withContent: false,
+    });
+    setPosts(res.data.posts);
+  };
+
+  let delay = 0;
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
   return (
-    <div>
-      <header className="px-3 py-2 bg-primary text-white ">
-        <div className="items-center flex justify-between">
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="logo" className="w-[45px]" />
-            <h2>
-              Website Rukun Tetangga
-              <br />
-              RT 006 Desa Cimandala
+    <div className="min-h-screen bg-white">
+      <Header />
+
+      <div className="w-full">
+        {/* Welcome Section */}
+
+        <div className="my-[50px]">
+          <h1 className="text-center text-primary font-bold text-header2 md:text-header tracking-wide pb-20">
+            HALO, WARGA RT 006
+            <br />
+            SELAMAT DATANG
+          </h1>
+
+          <div className="flex justify-center md:items-end flex-col md:flex-row gap-6 md:gap-20">
+            <AnimatedItem delay={0}>
+              <Link
+                to="/info"
+                className="flex flex-col justify-between md:h-[180px] items-center gap-2 p-2 rounded cursor-pointer transition hover:scale-105"
+              >
+                <img
+                  src={searchDocumentIcon}
+                  alt="search-document-icon"
+                  className="w-[70px] h-[80px]"
+                />
+                <span className="text-normal text-primary text-center font-bold">
+                  Informasi
+                  <br />
+                  Rukun Tetangga
+                </span>
+              </Link>
+            </AnimatedItem>
+            <AnimatedItem delay={isDesktop ? 0.1 : 0}>
+              <Link
+                to="/administration"
+                className="flex flex-col justify-between md:h-[180px] items-center gap-2 p-2 rounded cursor-pointer transition hover:scale-105"
+              >
+                <img
+                  src={administrationIcon}
+                  alt="administration-icon"
+                  className="w-[95px] h-[75px]"
+                />
+                <span className="text-normal text-primary text-center font-bold">
+                  Administrasi
+                  <br />
+                  Rukun Tetangga
+                </span>
+              </Link>
+            </AnimatedItem>
+          </div>
+        </div>
+
+        {/* News/Announcement Section */}
+
+        <div className=" bg-secondary py-[50px]">
+          <div>
+            <h2 className="text-center text-header font-bold text-primary mb-[50px]">
+              Informasi Rukun Tetangga
             </h2>
           </div>
-          <div>
-            <nav className="hidden md:flex gap-3">
-              <Link to="/service">Layanan</Link>
-              <Link to="/about">Tentang</Link>
-              <Link to="/login">Login</Link>
-            </nav>
-            <button
-              className="md:hidden"
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              <IoReorderThreeOutline size={30} />
+
+          <div className="w-full flex justify-center">
+            <div className="flex w-[90%] md:max-w-[1100px] flex-col md:flex-row flex-wrap justify-center gap-[40px] md:gap-6 mb-[30px]">
+              {posts.map((post) => {
+                delay += 1 * 0.1;
+                return (
+                  <AnimatedItem
+                    key={post.id}
+                    delay={isDesktop ? delay : undefined}
+                  >
+                    <NewsItem
+                      type={post.type}
+                      slug={post.slug}
+                      authorUsername={post.author.username}
+                      role={post.author.role}
+                      title={post.title}
+                      date={dateTimeFormatter(post.publishedAt, false)}
+                      image={post.thumbnail || picture}
+                    />
+                  </AnimatedItem>
+                );
+              })}
+            </div>
+          </div>
+          <div className="flex justify-center items-center">
+            <button onClick={() => navigate('/posts')} className="py-1 md:py-2 px-4 md:px-6 bg-blue-600 font-bold text-white rounded-md flex justify-center items-center gap-2">
+              <span>Lihat Lainnya</span>
+              <FaArrowRight />
             </button>
           </div>
         </div>
 
-        {/* === Mobile Menu Overlay === */}
-        <div
-          className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
-            menuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
-          onClick={() => setMenuOpen(false)}
-        />
+        {/* Profile */}
 
-        {/* === Mobile Side Menu === */}
-        <nav
-          className={`fixed top-0 right-0 h-full w-[75%] max-w-xs bg-primary text-white z-50 shadow-lg p-6 transition-transform duration-300 transform ${
-            menuOpen ? 'translate-x-0' : 'translate-x-full'
-          } md:hidden flex flex-col gap-4`}
-        >
-          <button
-            className="self-end text-xl"
-            onClick={() => setMenuOpen(false)}
-          >
-            <IoClose size={40}/>
-          </button>
-          <Link to="/service" onClick={() => setMenuOpen(false)}>
-            Layanan
-          </Link>
-          <Link to="/about" onClick={() => setMenuOpen(false)}>
-            Tentang
-          </Link>
-          <Link to="/login" onClick={() => setMenuOpen(false)}>
-            Login
-          </Link>
-        </nav>
-      </header>
+        <div className='className="w-full flex justify-center pt-[50px] pb-[70px] bg-white'>
+          <div className="flex w-[80%] md:max-w-[1100px] flex-col gap-3">
+            <h2 className="text-header2 md:text-header text-center mb-[50px] font-bold">
+              Profile Pengurus Rukun Tetangga
+            </h2>
 
-      <h2>Welcome</h2>
+            <div className="flex flex-col md:flex-row gap-9 flex-wrap md:gap-x-3 md:gap-y-9 items-center justify-around">
+              <AnimatedItem delay={isDesktop ? 0 : 0}>
+                <ProfileCard
+                  image={profileImage}
+                  fullName="Nama Pengurus"
+                  role="Ketua RT"
+                />
+              </AnimatedItem>
+              <AnimatedItem delay={isDesktop ? 0.1 : 0}>
+                <ProfileCard
+                  image={profileImage}
+                  fullName="Nama Pengurus"
+                  role="Sekretaris"
+                />
+              </AnimatedItem>
+              <AnimatedItem delay={isDesktop ? 0.2 : 0}>
+                <ProfileCard
+                  image={profileImage}
+                  fullName="Nama Pengurus"
+                  role="Bendahara"
+                />
+              </AnimatedItem>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
     </div>
   );
 };

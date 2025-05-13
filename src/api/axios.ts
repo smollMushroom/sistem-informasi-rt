@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  // baseURL: 'https://sistem-informasi-rt-api-production.up.railway.app/v1'
-  baseURL: 'http://localhost:3000/v1'
+  baseURL: 'https://sistem-informasi-rt-api-production.up.railway.app/v1'
+  // baseURL: 'http://localhost:3000/v1'
 });
 
 

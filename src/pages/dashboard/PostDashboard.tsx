@@ -111,13 +111,13 @@ const PostDashboard = () => {
     {
       key: 'type',
       label: 'Tipe',
-      render: (value: any, row: any) => row.type === 'news' ? "Berita" : "Pengumuman", 
+      render: (_value: any, row: any) => row.type === 'news' ? "Berita" : "Pengumuman", 
       tdClassName: 'text-center',
     },
     {
       key: 'author',
       label: 'Penulis',
-      render: (value: any, row: any) => row.author?.username || '-',
+      render: (_value: any, row: any) => row.author?.username || '-',
       tdClassName: 'text-center',
     },
     {

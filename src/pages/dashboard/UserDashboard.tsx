@@ -112,7 +112,7 @@ const UserDashboard = () => {
     {
       key: 'fullName',
       label: 'Nama Lengkap',
-      render: (value: any, row: any) => row?.profile?.fullName || '',
+      render: (_value: any, row: any) => row?.profile?.fullName || '',
     },
     {
       key: 'username',

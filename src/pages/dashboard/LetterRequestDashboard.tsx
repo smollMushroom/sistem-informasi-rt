@@ -107,7 +107,7 @@ const LetterRequestDashboard = () => {
     {
       key: 'fullName',
       label: 'Nama Lengkap',
-      render: (value: any, row: any) => row.user.profile.fullName || '',
+      render: (_value: any, row: any) => row.user.profile.fullName || '',
       tdClassName: 'text-center',
     },
     {
@@ -118,13 +118,13 @@ const LetterRequestDashboard = () => {
     {
       key: 'submissionDate',
       label: 'Tanggal Pengajuan',
-      render: (value: any, row: any) => dateTimeFormatter(row.submissionDate),
+      render: (_value: any, row: any) => dateTimeFormatter(row.submissionDate),
       tdClassName: 'text-center',
     },
     {
       key: 'letterNumber',
       label: 'Nomor Surat',
-      render: (value: any, row: any) => {
+      render: (_value: any, row: any) => {
         const splittedLetterNumber = row.letterNumber.split('-');
         return `${splittedLetterNumber[0]} / SK-P / ${splittedLetterNumber[1]} / ${splittedLetterNumber[2]}`;
       },
@@ -134,7 +134,7 @@ const LetterRequestDashboard = () => {
       key: 'status',
       label: 'Status',
       tdClassName: 'text-center',
-      render: (value: any, row: any) => {
+      render: (_value: any, row: any) => {
         return (
           <span
             className={`py-[6px] px-3 rounded-md text-sm font-medium text-white ${

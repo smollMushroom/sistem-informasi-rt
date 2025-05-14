@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link, useNavigate } from 'react-router-dom';
 import { useRegisterStore } from '@/stores/registerStore';
 import { register } from '@/services/userService';
@@ -91,8 +92,10 @@ const RegisterProfile = () => {
       reset();
       navigate('/login');
     } catch (error) {
-      setLoading(false)
-      console.error('Gagal registrasi:', error);
+      setFirstErrorMessage('NIK atau Nomor HP sudah digunakan')
+      setLoading(false);
+      setNotificationVisible(true)
+      console.log(error)
     }
   };
 

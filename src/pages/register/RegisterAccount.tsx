@@ -5,18 +5,19 @@ import { RegisterAccountErrors } from '@/types/user';
 import Input from '@/components/Input';
 import AccountValidators from '@/utils/validators/AccountValidators';
 import NotificationModal from '@/components/NotificationModal';
+import { checkUserIsUsed } from '@/services/userService';
 
 const RegisterAccount = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<RegisterAccountErrors>({});
-  const [firstErrorMessage, setFirstErrorMessage] = useState('')
+  const [firstErrorMessage, setFirstErrorMessage] = useState('');
   const [notificationVisible, setNotificationVisible] = useState(false);
   const { setAccount } = useRegisterStore();
   const navigate = useNavigate();
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const newErrors = {
       email: AccountValidators.validateEmail(email),
       username: AccountValidators.validateUsername(username),
@@ -25,19 +26,31 @@ const RegisterAccount = () => {
 
     setErrors(newErrors);
 
-    const firstErrorMessage = Object.values(newErrors).find((message) => message !== null) ?? '';
+    const firstErrorMessage =
+      Object.values(newErrors).find((message) => message !== null) ?? '';
     const hasError = Object.values(newErrors).some((msg) => msg !== null);
 
     setFirstErrorMessage(firstErrorMessage);
 
-    if(firstErrorMessage) {
-      setNotificationVisible(true)
+    if (firstErrorMessage) {
+      setNotificationVisible(true);
     }
 
     if (hasError) return;
 
-    setAccount({ email, username, password, role: 'warga'});
-    navigate('/register/profile');
+    try {
+      const response = await checkUserIsUsed(email, username);
+
+      if (response.data) {
+        setAccount({ email, username, password, role: 'warga' });
+        navigate('/register/profile');
+      }
+      
+      setFirstErrorMessage('Email atau username sudah digunakan');
+      setNotificationVisible(true);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -54,11 +67,17 @@ const RegisterAccount = () => {
             value={username}
             onChange={(val) => {
               setUsername(val);
-              setErrors((prev) => ({ ...prev, username: AccountValidators.validateUsername(val)}));
+              setErrors((prev) => ({
+                ...prev,
+                username: AccountValidators.validateUsername(val),
+              }));
             }}
             error={errors.username}
             onValidate={(val) => {
-              setErrors((prev) => ({ ...prev, username: AccountValidators.validateUsername(val) ?? '' }));
+              setErrors((prev) => ({
+                ...prev,
+                username: AccountValidators.validateUsername(val) ?? '',
+              }));
             }}
           />
           <Input
@@ -69,11 +88,17 @@ const RegisterAccount = () => {
             value={email}
             onChange={(val) => {
               setEmail(val);
-              setErrors((prev) => ({ ...prev, email: AccountValidators.validateEmail(val)}));
+              setErrors((prev) => ({
+                ...prev,
+                email: AccountValidators.validateEmail(val),
+              }));
             }}
             error={errors.email}
             onValidate={(val) => {
-              setErrors((prev) => ({ ...prev, email: AccountValidators.validateEmail(val) ?? '' }));
+              setErrors((prev) => ({
+                ...prev,
+                email: AccountValidators.validateEmail(val) ?? '',
+              }));
             }}
           />
           <Input
@@ -84,11 +109,17 @@ const RegisterAccount = () => {
             value={password}
             onChange={(val) => {
               setPassword(val);
-              setErrors((prev) => ({ ...prev, password: AccountValidators.validatePassword(val)}));
+              setErrors((prev) => ({
+                ...prev,
+                password: AccountValidators.validatePassword(val),
+              }));
             }}
             error={errors.password}
             onValidate={(val) => {
-              setErrors((prev) => ({ ...prev, password: AccountValidators.validatePassword(val) ?? '' }));
+              setErrors((prev) => ({
+                ...prev,
+                password: AccountValidators.validatePassword(val) ?? '',
+              }));
             }}
           />
         </div>
@@ -98,16 +129,18 @@ const RegisterAccount = () => {
         >
           Selanjutnya
         </button>
-        <div className='flex gap-1 justify-center'>
-          <p className='inline-block'>Memiliki akun? </p>
-          <Link to={'/login'} className='text-blue-600 inline-block text-blue'>Login</Link>
+        <div className="flex gap-1 justify-center">
+          <p className="inline-block">Memiliki akun? </p>
+          <Link to={'/login'} className="text-blue-600 inline-block text-blue">
+            Login
+          </Link>
         </div>
       </div>
       <NotificationModal
         message={firstErrorMessage}
         onClose={() => setNotificationVisible(false)}
         visible={notificationVisible}
-        type='error'
+        type="error"
       />
     </div>
   );

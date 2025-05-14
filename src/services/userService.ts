@@ -15,6 +15,11 @@ export const getUsers = async (query: GetUserQuery) => {
   return res.data;
 };
 
+export const checkUserIsUsed = async (email: string, username: string) => {
+  const res = await api.post('/users/create/account', {email, username})
+  return res.data
+} 
+
 export const updateUser = async (id:string, data: UpdateUser) => {
   const token = localStorage.getItem('token');
   const res = await api.put(`/users/update/${id}?withProfile=true`, data, {

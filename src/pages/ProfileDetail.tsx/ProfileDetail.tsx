@@ -149,8 +149,6 @@ const ProfileDetail = () => {
   };
 
   const handleSave = () => {
-    console.log(error);
-
     if (Object.values(error).every((value) => value === null)) {
       handleModal('confirmVisible', true);
     }

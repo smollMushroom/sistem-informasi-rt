@@ -68,8 +68,9 @@ const UserDashboard = () => {
       setNotifData({
         type: 'success',
         title: 'Berhasil Dihapus',
-        message: `Postingan "${selectedUser.username}" berhasil dihapus.`,
+        message: `Pengguna "${selectedUser.username}" berhasil dihapus.`,
       });
+      fetchUsers({ page: currentPage, order: 'desc', withProfile: true });
     } catch (error: any) {
       setNotifData({
         type: 'error',

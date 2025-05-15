@@ -5,7 +5,9 @@ import administrationIcon from '@/assets/administration-icon.png';
 import NewsItem from '@/components/NewsItem';
 import AnimatedItem from '@/components/AnimatedItem';
 import ProfileCard from '@/components/ProfileCard';
-import profileImage from '@/assets/Profile-example.png';
+import bendaharaPicture from '@/assets/Sarwo.jpg'
+import ketuaPicture from '@/assets/Deni.jpg'
+import sekretarisPicture from '@/assets/Fatur.jpg'
 import picture from '@/assets/example.png'
 import Footer from '@/components/Footer';
 import useBreakpoint from '@/hooks/useBreakpoint';
@@ -135,29 +137,32 @@ const Home = () => {
         <div className='className="w-full flex justify-center pt-[50px] pb-[70px] bg-white'>
           <div className="flex w-[80%] md:max-w-[1100px] flex-col gap-3">
             <h2 className="text-header2 md:text-header text-center mb-[50px] font-bold">
-              Profile Pengurus Rukun Tetangga
+              Profil Pengurus Rukun Tetangga
             </h2>
 
             <div className="flex flex-col md:flex-row gap-9 flex-wrap md:gap-x-3 md:gap-y-9 items-center justify-around">
               <AnimatedItem delay={isDesktop ? 0 : 0}>
                 <ProfileCard
-                  image={profileImage}
-                  fullName="Nama Pengurus"
+                  image={ketuaPicture}
+                  fullName="Deni S"
                   role="Ketua RT"
+                  className='shadow-md border'
                 />
               </AnimatedItem>
               <AnimatedItem delay={isDesktop ? 0.1 : 0}>
                 <ProfileCard
-                  image={profileImage}
-                  fullName="Nama Pengurus"
+                  image={sekretarisPicture}
+                  fullName="Fatur"
                   role="Sekretaris"
+                  className='shadow-md border'
                 />
               </AnimatedItem>
               <AnimatedItem delay={isDesktop ? 0.2 : 0}>
                 <ProfileCard
-                  image={profileImage}
-                  fullName="Nama Pengurus"
+                  image={bendaharaPicture}
+                  fullName="H Sarwo"
                   role="Bendahara"
+                  className='shadow-md border'
                 />
               </AnimatedItem>
             </div>

@@ -8,7 +8,6 @@ import { deleteUsers } from '@/services/userService';
 import { useAuthStore } from '@/stores/authStore';
 import { useUserStore } from '@/stores/userStore';
 import { JwtPayload } from '@/types/jwtPayload';
-import dateTimeFormatter from '@/utils/formatters/dateTimeFormatter';
 import { jwtDecode } from 'jwt-decode';
 import { useEffect, useState } from 'react';
 import { AiOutlineEye } from 'react-icons/ai';
@@ -126,12 +125,6 @@ const UserDashboard = () => {
     {
       key: 'role',
       label: 'posisi',
-      tdClassName: 'text-center',
-    },
-    {
-      key: 'createdAt',
-      label: 'Dibuat',
-      render: (value: any) => dateTimeFormatter(value, true),
       tdClassName: 'text-center',
     },
     {
